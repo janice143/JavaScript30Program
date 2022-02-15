@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Canvas</title>
+</head>
+<style>
+    body{
+        margin:0;
+        padding: 0;
+    }
+    html, body {
+        margin:0;
+		overflow: hidden;
+  }
+
+	canvas{
+		overflow: hidden;
+	}
+
+    #myCanvas{
+        border: 1px solid black;
+        margin:30px auto 20px;
+        display:flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .controlers{
+            margin-top: 30px;
+            font-size: 15px;
+            font-weight: bold;
+            display:flex;
+            align-items: center;
+            justify-content: center;
+        }
+        label{
+            margin-right: 10px;
+        }
+        input{
+            margin-right: 10px;
+        }
+        #clear{
+            margin:0px auto;
+            display:flex;
+            align-items: center; 
+            justify-content: center;
+            font-size: 15px;
+            font-weight: bold;
+
+        }
+        #clear{
+            background: #5E5DF0;
+            border-radius: 999px;
+            box-shadow: #5E5DF0 0 10px 20px -10px;
+            box-sizing: border-box;
+            color: #FFFFFF;
+            cursor: pointer;
+            font-family: Inter,Helvetica,"Apple Color Emoji","Segoe UI Emoji",NotoColorEmoji,"Noto Color Emoji","Segoe UI Symbol","Android Emoji",EmojiSymbols,-apple-system,system-ui,"Segoe UI",Roboto,"Helvetica Neue","Noto Sans",sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            line-height: 24px;
+            opacity: 1;
+            outline: 0 solid transparent;
+            padding: 8px 18px;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+            width: fit-content;
+            word-break: break-word;
+            border: 0;
+            }
+           
+          
+</style>
+<body>
+    <div class="main">
+        <div class="controlers">
+            <label for="color">颜色:</label>
+            <input id="color" type="color" name="color" value="#000000">
+    
+            <label for="lineSize">粗细:</label>
+            <input id="lineSize" type="range" name="lineSize" value="1" min="1" max="100">
+    
+            <label for="eraser">橡皮擦:</label>
+            <input id="eraser" type="checkbox" name="eraser">
+    
+        </div>
+        <canvas id="myCanvas" width="500" height="500" style="overflow:auto;"></canvas>
+        
+        <input id="clear" type="button" name="clear" value="清屏">
+
+    </div>
+    
+    
+</body>
+<script>
+    const c = document.getElementById("myCanvas");
+    const ctx = c.getContext("2d");
+    const inputs = document.querySelectorAll('.controlers input');
+    const inputClear = document.querySelectorAll('#clear');
+
+    c.width = window.innerWidth*0.8;
+	c.height = window.innerHeight*0.75;
+
+    let strokeColor = "black"
+    let lineSize = 1;
+    let eraserChecked = false;
+
+    let isDrawing = false;
+    let lastX = 0;
+    let lastY = 0;
+
+    ctx.lineJoin = 'round';
+    ctx.lineCap = 'round';
+
+    // console.log(c.width,c.height)
+
+    function updateValue(){
+        if (this.name == 'color')
+            strokeColor = this.value;
+        else if (this.name == 'lineSize'){
+            scale = (Math.log(100)-Math.log(1))/99;
+            lineSize = Math.floor(Math.exp(Math.log(1)+scale*(this.value-1)));
+            console.log(lineSize);
+
+        }
+        else{
+            eraserChecked = this.checked;
+           if (eraserChecked == true)
+                strokeColor = 'white';
+            else
+                strokeColor = inputs[0].value;
+           
+        }
+        // console.log(strokeColor,lineSize,eraserChecked) 
+    }
+   
+    function draw(e) {
+        // console.log(e.type);
+        if (!isDrawing) return; // stop the fn from running when they are not moused down
+
+            // console.log(e.type);
+		if(e.type == "mousemove"){
+			x = e.offsetX;
+			y = e.offsetY;
+		} else  {
+        // 处理触摸屏操作
+			x = e.changedTouches[0].clientX -e.target.offsetLeft;
+			y = e.changedTouches[0].clientY-e.target.offsetTop;
+        // console.log(e);
+		}
+
+        // console.log(strokeColor,lineSize,eraserChecked) 
+        ctx.lineWidth = lineSize;
+        ctx.strokeStyle=strokeColor;
+        ctx.beginPath();
+        // start from
+        ctx.moveTo(lastX, lastY);
+        // go to
+        ctx.lineTo(x, y);
+        ctx.stroke();
+        [lastX, lastY] = [x, y];
+
+    }
+
+    // 清屏
+    function clearCanvas(){
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, c.width, c.height);
+
+    }
+
+ 
+    inputs.forEach(input=>input.addEventListener('change',updateValue));
+
+    c.addEventListener('mousedown', (e) => {
+        isDrawing = true;
+        [lastX, lastY] = [e.offsetX, e.offsetY];
+        });
+
+    c.addEventListener('mousemove', draw);
+    c.addEventListener('mouseup', () => isDrawing = false);
+    c.addEventListener('mouseout', () => isDrawing = false);
+
+    // 移动端触摸屏
+
+    c.addEventListener('touchstart', (e) => {
+		isDrawing = true;
+		lastX = e.changedTouches[0].clientX-e.target.offsetLeft;
+		lastY = e.changedTouches[0].clientY-e.target.offsetTop;
+
+        // // 获取画板相对于屏幕的偏移量，即左上角的坐标
+        // this.offsetLeft = e.target.offsetLeft
+        // this.offsetTop = e.target.offsetTop
+        console.log(e)
+  
+	});
+	
+	c.addEventListener('touchmove', draw);
+	c.addEventListener('touchend', () => isDrawing = false);
+	c.addEventListener('touchcancel', () => isDrawing = false);
+    
+    inputClear[0].addEventListener('click',clearCanvas);
+
+    
+ 
+    </script>
+
+</html>

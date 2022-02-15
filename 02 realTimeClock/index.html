@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real Time Clock</title>
+    <style>
+        body{
+            margin: 0;
+            padding: 0;
+            background-color: black;
+            color:white;
+            text-shadow: 0 0 .5rem black;
+        }
+        #main{
+
+            display: flex;
+            min-height: 100vh;
+            align-items: center;
+            justify-content: center;
+
+        }
+        .clock{
+            width: 300px;
+            height: 300px;
+            border-radius: 300px;
+            border: 20px solid white;
+            position: relative;
+
+        }
+        .hand{
+            width: 120px;
+            height: 6px;
+            background-color: blueviolet;
+            position:absolute;
+            top:148px;
+            right: 148px;
+
+            transform-origin: 100%;
+            transition:all 0.05s;
+            transition-timing-function: cubic-bezier(0.1, 2.7, 0.58, 1);
+        }
+        .hour-hand{
+            width: 100px;
+        }
+        .second-hand{
+            height: 4px;
+        }
+        .number{
+            width: 300px;
+            height:300px;
+            font-size: 15px;
+            
+            /* border: 1px solid blue; */
+            /* border-radius: 280px; */
+
+            position:absolute;
+            top:0px;
+            right: 0px;
+        }
+        .number span{
+            display: block;
+            width: 30px;
+            height: 30px;
+            /* background-color: red; */
+            text-align: center;
+            line-height: 30px;
+        }
+        /* 数字位置算法
+            clc;
+            clear;
+            num=2;
+            top=135*sin((num-3)*30/180*pi)+135
+            left=135*cos((num-3)*30/180*pi)+135
+ */
+        .num12{
+            position: absolute;
+            left:135px;
+        }
+        .num1{
+            position: absolute;
+            top: 18.1px;
+            left:202.5px;
+        }
+        .num2{
+            position: absolute;
+            top: 67.5px;
+            left:251.9px;
+        }
+        .num4{
+            position: absolute;
+            top:202.5px;
+            left:251.9px;
+
+        }
+        .num5{
+            position: absolute;
+            top: 251.9px;
+            left:202.5px;
+        }
+        .num7{
+            position: absolute;
+            top: 251.9px;
+            left:67.5px;
+        }
+        .num8{
+            position: absolute;
+            top: 202.5px;
+            left:18.1px;
+        }
+        .num10{
+            position: absolute;
+            top: 67.5px;
+            left:18.1px;
+        }
+        .num11{
+            position: absolute;
+            top: 18.1px;
+            left:67.5px;
+        }
+        .num3{
+            position: absolute;
+            right:0px;
+            top:135px;
+        }
+        .num6{
+            position: absolute;
+            bottom:0px; 
+            left:135px;
+        }
+        .num9{
+            position: absolute;
+            left:0px;
+            top:135px;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="main">
+        <div class="clock">
+            <div class="hour-hand hand"></div>
+            <div class="minute-hand hand"></div>
+            <div class="second-hand hand"></div>
+            <div class="number">
+                <span class="num12">12</span>
+                <span class="num1">1</span>
+                <span class="num2">2</span>
+                <span class="num3">3</span>
+                <span class="num4">4</span>
+
+                <span class="num5">5</span>
+                <span class="num6">6</span>
+                <span class="num7">7</span>
+                <span class="num8">8</span>
+
+                <span class="num9">9</span>
+                <span class="num10">10</span>
+                <span class="num11">11</span>
+
+            </div>
+        </div>
+    </div>
+    <script>
+        // 获取指针的transform样式，从而让其旋转
+        const secondHand = document.querySelector('.second-hand');
+        const minuteHand = document.querySelector('.minute-hand');
+        const hourHand = document.querySelector('.hour-hand');
+
+        const audio = document.querySelector('audio');
+        // 获取当前时间，从时间里设置指针
+        function setDate(){
+            const time = new Date();
+            const second = time.getSeconds();
+            const secondDeg = parseInt(second/60*360)+90;
+            secondHand.style.transform = `rotate(${secondDeg}deg)`;
+            
+
+            const minute= time.getMinutes();
+            const minuteDeg = parseInt(minute/(60)*360+second/10)+90;
+            minuteHand.style.transform = `rotate(${minuteDeg}deg)`;
+
+            const hour= time.getHours();
+            const hourDeg = parseInt(hour/(12)*360+minute/(60)*30)+90;
+            hourHand.style.transform = `rotate(${hourDeg}deg)`;
+            
+
+        }
+
+        // 设置定时器美隔一秒时间进行刷新页面
+        setInterval(setDate,1000);
+        // 
+        
+        
+
+        setDate(); // 当指针转一圈后，重置度数
+
+
+    </script>
+
+
+
+</body>
+</html>

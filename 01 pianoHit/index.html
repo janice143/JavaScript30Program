@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>pianoHit</title>
+    <style>
+        a{
+            text-decoration: none;
+            color:black; 
+        }
+        html {
+        font-size: 10px;
+        background: url('./drumback.jpg') bottom center;
+        background-size: cover;
+        /* 让背景图片不随滚轮缩放 */
+        background-attachment:fixed; 
+        }
+
+        #drumKit,#pianoKit{
+            /* background-color: red; */
+            /* 在需要垂直居中的父元素上，设置display:flex和align-items：center。要求：父元素必须显示设置height值 */
+            display: flex;
+            flex:1;
+            min-height: 90vh; /*vh 就是当前屏幕可见高度的100% https://blog.csdn.net/weixin_42207975/article/details/107145439*/
+            align-items: center; /*子元素水平居中*/
+            justify-content: center; /*子元素垂直居中*/
+
+        }
+        .key{
+            width: 90px;
+            height: 80px;
+            background: rgba(0,0,0,0.4);
+            text-shadow: 0 0 .5rem black;
+            margin-right: 10px;
+            /* margin-top: 310px;  */
+            text-align: center;   
+            border:1px solid rgba(255,255,255,0.2);
+            border-radius: 5px;
+            transition:all 0.07s ease;
+        }
+        .key-ABC{
+            font-size: 30px;
+            color:white;
+            margin-bottom: 0px;
+            margin-top: 10px;
+        }
+        .key-tune{
+            font-size: 10px;
+            color:rgb(217,198,6);
+            margin-top: 0px;
+        }
+        .playing{
+            transform: scale(1.1);
+            border-color: #ffc600;
+            box-shadow: 0 0 1rem #ffc600;
+        }
+        #switch{
+            width: 300px;
+            height:30px;
+            font-size: 20px;
+            background:rgb(66,132,243,0.4);
+            position: fixed;
+            left:0;  
+            right:0;  
+            margin:0 auto; 
+            /* border-bottom:2px solid black; */
+            line-height: 30px;   
+            text-align: center; 
+            color:black;        
+        }
+       
+        #switch a:nth-child(1){
+            margin-right: 30px;
+           
+        }
+        #switch .chosen{
+            color:white;
+        }
+        
+        #pianoKit{
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="switch">
+        <a class="drum chosen" href="#" onclick="addChosenDrum()">Drum Kit</a>
+        <a class="piano" href="#" onclick="addChosen()">Piano Kit</a>
+
+        
+    </div>
+    <div id="main">
+        
+        <div id="pianoKit">
+            <div data-key="65" class="key1 key" >
+                <a href="#" onclick="clickPlaySound(65)">
+                    <p class="key-ABC">A</p>
+                    <p class="key-tune">DO</p>
+                </a>
+            </div>
+            
+            <div data-key="83" class="key2 key">
+                <a href="#" onclick="clickPlaySound(83)">
+                    <p class="key-ABC">S</p>
+                    <p class="key-tune">RE</p>
+                </a>
+                
+            </div>
+            <div data-key="68" class="key3 key">
+                <a href="#" onclick="clickPlaySound(68)">
+                    <p class="key-ABC">D</p>
+                    <p class="key-tune">MI</p>
+                </a>
+                
+            </div>
+            <div data-key="70" class="key4 key">
+                <a href="#" onclick="clickPlaySound(70)">
+                    <p class="key-ABC">F</p>
+                    <p class="key-tune">FA</p>
+                </a>
+               
+            </div>
+            <div data-key="71" class="key5 key">
+                <a href="#" onclick="clickPlaySound(71)">
+                    <p class="key-ABC">G</p>
+                    <p class="key-tune">SOL</p>
+                </a>
+               
+            </div>
+            <div data-key="72" class="key6 key">
+                <a href="#" onclick="clickPlaySound(72)">
+                    <p class="key-ABC">H</p>
+                    <p class="key-tune">LA</p>
+                </a>
+               
+            </div>
+            <div data-key="74" class="key7 key">
+                <a href="#" onclick="clickPlaySound(74)">
+                    <p class="key-ABC">J</p>
+                    <p class="key-tune">SI</p>
+                </a>
+                
+            </div>
+
+            <audio data-key="65" src="sounds/1.MP3"></audio>
+            <audio data-key="83" src="sounds/2.MP3"></audio>
+            <audio data-key="68" src="sounds/3.MP3"></audio>
+            <audio data-key="70" src="sounds/4.MP3"></audio>
+            <audio data-key="71" src="sounds/5.MP3"></audio>
+            <audio data-key="72" src="sounds/6.MP3"></audio>
+            <audio data-key="74" src="sounds/7.MP3"></audio>
+            
+        </div>
+        <div id="drumKit" class="chosen">
+            <div data-key="65" class="key1 key">
+                <a href="#1" onclick="clickPlaySound(65)">
+                    <p class="key-ABC">A</p>
+                    <p class="key-tune">CLAP</p>
+                </a>
+                
+            </div>
+            <div data-key="83" class="key2 key">
+                <a href="#1" onclick="clickPlaySound(83)">
+                    <p class="key-ABC">S</p>
+                    <p class="key-tune">HIHAT</p>
+                </a>
+                
+            </div>
+            <div data-key="68" class="key3 key">
+                <a href="#1" onclick="clickPlaySound(68)">
+                    <p class="key-ABC">D</p>
+                    <p class="key-tune">KICK</p>
+                </a>
+                
+            </div>
+            <div data-key="70" class="key4 key">
+                <a href="#1" onclick="clickPlaySound(70)">
+                    <p class="key-ABC">F</p>
+                    <p class="key-tune">OPENHAP</p>
+                </a>
+                
+            </div>
+            <div data-key="71" class="key5 key">
+                <a href="#1" onclick="clickPlaySound(71)">
+                    <p class="key-ABC">G</p>
+                    <p class="key-tune">BOOM</p>
+                </a>
+                
+            </div>
+            <div data-key="72" class="key6 key">
+                <a href="#1" onclick="clickPlaySound(72)">
+                    <p class="key-ABC">H</p>
+                    <p class="key-tune">RIDE</p>
+                </a>
+                
+            </div>
+            <div data-key="74" class="key7 key">
+                <a href="#1" onclick="clickPlaySound(74)">
+                    <p class="key-ABC">J</p>
+                    <p class="key-tune">SNARE</p>
+                </a>
+                
+            </div>
+            <div data-key="75" class="key7 key">
+                <a href="#1" onclick="clickPlaySound(75)">
+                    <p class="key-ABC">K</p>
+                    <p class="key-tune">TOM</p>
+                </a>
+                
+            </div>
+            <div data-key="76" class="key7 key">
+                <a href="#1" onclick="clickPlaySound(76)">
+                    <p class="key-ABC">L</p>
+                    <p class="key-tune">TINK</p>
+                </a>
+            </div>
+            <audio data-key="65" src="sounds/clap.wav"></audio>
+            <audio data-key="83" src="sounds/hihat.wav"></audio>
+            <audio data-key="68" src="sounds/kick.wav"></audio>
+            <audio data-key="70" src="sounds/openhat.wav"></audio>
+            <audio data-key="71" src="sounds/boom.wav"></audio>
+            <audio data-key="72" src="sounds/ride.wav"></audio>
+            <audio data-key="74" src="sounds/snare.wav"></audio>
+            <audio data-key="75" src="sounds/tom.wav"></audio>
+            <audio data-key="76" src="sounds/tink.wav"></audio>
+
+        </div>
+        
+    </div>
+    
+<script>
+    // 点击a标签，切换键盘:点击piano键盘，添加chosen class，去掉drum的class; 显示对应的piano键盘;在对应的键盘中添加chosen，这样audio也可以对应
+    function addChosen(){
+        const chosen =  document.getElementsByClassName("piano");
+        const notChosen = document.getElementsByClassName("drum");
+        chosen[0].classList.add('chosen');
+        notChosen[0].classList.remove('chosen');
+        const notChosenKit = document.getElementById("drumKit");
+        notChosenKit.classList.remove('chosen');
+        notChosenKit.style.display = "none"; 
+        const chosenKit = document.getElementById("pianoKit");
+        chosenKit.style.display = "flex";
+        chosenKit.classList.add('chosen');
+        // 换钢琴壁纸
+        const wallpaper = document.getElementsByTagName("html");
+        wallpaper[0].style.backgroundImage="url(./pianoback.jpg)";
+        
+
+    }
+    function addChosenDrum(){
+        const chosen =  document.getElementsByClassName("drum");
+        const notChosen = document.getElementsByClassName("piano");
+        chosen[0].classList.add('chosen');
+        notChosen[0].classList.remove('chosen');
+        const notChosenKit = document.getElementById("pianoKit");
+        notChosenKit.classList.remove('chosen');
+        notChosenKit.style.display = "none"; 
+        const chosenKit = document.getElementById("drumKit");
+        chosenKit.style.display = "flex";
+        chosenKit.classList.add('chosen');
+        // 换鼓壁纸
+        const wallpaper = document.getElementsByTagName("html");
+        wallpaper[0].style.backgroundImage="url(./drumback.jpg)";
+    }
+
+   
+    // 点击键盘字母时，对应的键添加class属性
+    function playSound(e){
+        const audio = document.querySelector(`.chosen audio[data-key="${e.keyCode}"]`);
+        // console.log(audio);
+        if (!audio) return;
+        const key = document.querySelector(`.chosen div[data-key="${e.keyCode}"]`);
+        key.classList.add('playing');//添加playing类属性
+        audio.currentTime = 0; //音频重头播放
+
+        audio.play();
+    }
+    
+     // 去掉playing 类属性
+     function removeTransition(e){
+         if (e.propertyName !='transform') return;
+         this.classList.remove('playing');
+     }
+
+    function clickPlaySound(keycode){
+        // data-key=keycode;
+        const audio = document.querySelector(`.chosen audio[data-key="${keycode}"]`);
+        if (!audio) return;
+        const key = document.querySelector(`.chosen div[data-key="${keycode}"]`);
+        key.classList.add('playing');//添加playing类属性
+        audio.currentTime = 0; //音频重头播放
+        audio.play();
+        // console.log(audio);
+    };
+
+
+   
+    const keys = document.querySelectorAll('.key');
+    keys.forEach(key=>key.addEventListener('transitionend',removeTransition));
+    window.addEventListener('keydown',playSound);
+    
+
+
+
+</script>
+
+</body>
+</html>
+
+

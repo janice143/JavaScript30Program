@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Go list!</title>
+
+    <style>
+        body{
+            margin:0;
+            padding: 0;
+        }
+      
+        #go-task-main{
+            max-width: 400px;
+            margin: 50px auto;
+            border-radius: 5px;
+            border:1px solid black;
+            box-shadow: 10px 10px 0 rgba(0,0,0,0.1);
+            font-size: 15px;
+            position: relative;
+        }
+        .add-icon,#task-input{
+            display:block;
+            margin:0 auto;
+            height: 50px;
+            width: 100%;
+            padding:0;
+            margin:0;
+            text-align: center;
+            font-size: 15px;
+            border:none;
+            border-bottom: 1px solid #e4a3a3;
+            border-top-right-radius: 5px;
+            border-top-left-radius: 5px;
+            box-sizing:border-box;
+            
+        }
+
+        .task-item{
+            height: 50px;
+            border-bottom: 1px solid #F1F1F1;
+
+            line-height: 50px;
+            display: flex;
+            align-items: center;
+            padding:0 ;
+            padding:0 0 0 20px;
+        }
+        .task-item p{
+            margin-left:10px;
+            margin-top: 0;
+            margin-bottom: 0;
+            width: 340px;
+            padding-left: 10px;
+        }
+        .task-item :last-child {
+            border-bottom: 0;
+        }
+        .add-icon{
+            background-color: rgba(220,38,38,0.8);
+            font-size: 30px;
+            color:white;
+            position: absolute;
+            top:0;
+            text-align: center;
+            line-height: 50px;
+            /* display: none; */
+        }
+        .add-icon:hover{
+           
+            cursor:pointer;
+        }
+        .task-item:hover{
+            background: #F9F9F9;
+            cursor:pointer;
+        }
+        input:checked + p {
+            background: #F9F9F9;
+            text-decoration: line-through;
+        }
+
+
+    </style>
+</head>
+<body>
+    <div id="go-task-main">
+        
+        <input id="task-input" type="text" placeholder="添加一个任务，回车确认">
+        <div class="add-icon">+</div>
+    
+        <div class="task-item">
+            <input type="checkbox">
+            <p>tip1: 双击删除任务</p>
+        </div>
+        
+        <div class="task-item">
+            <input type="checkbox">
+            <p>tip2: 完成一项任务打钩</p>
+        </div>
+        <div class="task-item">
+            <input type="checkbox">
+            <p>tip3: 按住shif键多选</p>
+        </div>
+        <div class="task-item">
+            <input type="checkbox">
+            <p>开启你的任务</p>
+        </div>
+        
+        <div class="new-task"></div>
+    </div>
+</body>
+<script>
+    
+    let lastChecked;
+
+    function clickCheck(e){
+        let inBetween = false;
+        // console.log(e.shiftKey)
+        // 打印出按住shift键后的任务列表,标记第一个最后一个check的box，这个box到按住shift后点击的box都打印出来
+        if(e.shiftKey && this.checked)
+            inputChecks.forEach(inputCheck => {
+                // console.log(inputCheck === this || inputCheck === lastChecked);
+                if (inputCheck === this || inputCheck === lastChecked) {
+                    inBetween = !inBetween;
+                    // console.log('Starting to check them in between!');
+                }
+                // console.log('行内是否',inBetween);
+                if (inBetween) {
+                    inputCheck.checked = true;
+                }
+            })
+        lastChecked = this;
+
+    }
+    function addHideFun(){
+        this.style.display = 'none';
+    }
+    function displayTask(){
+        // console.log(this.value);
+        // 使用createElement创建元素
+        const newTaskItem = document.createElement('div');
+        newTaskItem.className = 'new-task-item';
+        
+        const html =
+            `
+            <div class="task-item">
+                <input type="checkbox">
+                <p>${this.value}</p>
+            </div>
+            `;
+        newTaskItem.innerHTML = html;
+        newTask.append(newTaskItem);
+        // console.log(newTask);
+        // console.log(html);
+        this.value = ''
+        
+        // console.log(newTaskItem)
+        newTaskItem.addEventListener('dblclick',removeTask)
+        
+    }
+    function removeTask(e){
+        console.log(e.path[1].remove());
+    }
+    // 匹配类名为add-icon的元素，点击该元素时，隐藏
+    const addHide = document.querySelector('.add-icon');
+    // console.log(addHide)
+    addHide.addEventListener('click',addHideFun);
+
+    // 匹配类型为text的input，往里输入文字时，添加css样式
+    const textInput = document.querySelector('#task-input');
+    const newTask = document.querySelector('.new-task');
+    textInput.addEventListener('change',displayTask);
+
+    // 清除任务。新添加的元素没有算上
+    const textItems = document.querySelectorAll('.task-item p');
+    console.log(textItems)
+    textItems.forEach(textItem => textItem.addEventListener('dblclick',removeTask))
+    
+
+
+    const inputChecks = document.querySelectorAll('.task-item input');
+    inputChecks.forEach(inputCheck => inputCheck.addEventListener('click',clickCheck));
+    
+
+</script>
+</html>

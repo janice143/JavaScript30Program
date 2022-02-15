@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fun dictionary</title>
+    <style>
+        body{
+            margin:0;
+            padding: 0;
+            background-color: blueviolet;
+        }
+        .main{
+            width: 1000px;
+            min-height: 100vh;
+            margin:0 auto;
+            /* background-color: blue; */
+            
+            
+        }
+        #search{
+            margin-top: 30px;
+            width: 50%;
+            height: 80px;
+            text-align: center;
+            position: relative;
+            left: 25%;
+            border-radius: 5px;
+            font-size: 20px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.12), inset 0 0 2px rgba(0, 0, 0, 0.19);
+        }
+        .content{
+            font:10px;
+            color:black;
+        }
+        .content li {
+            background: white;
+            list-style: none;
+            border-bottom: 1px solid #D8D8D8;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.14);
+            margin: 0;
+            padding: 20px;
+            transition: background 0.2s;
+        }
+
+        .content li:nth-child(even) {
+            transform: perspective(100px) rotateX(3deg) translateY(2px) scale(1.001);
+            background: linear-gradient(to bottom,  #ffffff 0%,#EFEFEF 100%);
+        }
+
+        .content li:nth-child(odd) {
+            transform: perspective(100px) rotateX(-3deg) translateY(3px);
+            background: linear-gradient(to top,  #ffffff 0%,#EFEFEF 100%);
+        }
+        .content .definition{
+            font-size: 8px;
+
+        }
+
+        .hl{
+            background: #ffc600;
+        }
+
+
+    </style>
+
+
+
+</head>
+
+<body>
+    <div class="main">
+        <input id="search" type="text" name="search" placeholder="输入你要查找的单词">
+        <ul class="content">
+            <!-- <li>Filter for a word</li>
+            <li>or a state</li> -->
+        </ul>
+    </div>
+</body>
+<script>
+    const input = document.querySelector('#search');
+    const content = document.querySelector('.content');
+
+    let dict = []; 
+   
+    // console.log(searchWord)
+    const endpoint = 'https://gist.githubusercontent.com/BideoWego/60fbd40d5d1f0f1beca11ba95221dd38/raw/58fb4cce910fbf5fa67a2f0f1f619c09d7b1b373/dictionary.json';
+    // console.log(endpoint);
+    // console.log(fetch(endpoint));
+    fetch(endpoint)
+        // .then(blob => console.log(blob.json()))
+        //response.json()是一个异步操作，取出所有内容，并将其转为 JSON 对象
+        .then(response => response.json()) 
+        // .then(data => console.log(data)) // data是一个对象
+        // 对象转换为数组
+        .then(data => Object.keys(data).forEach(v => {
+                let o = {};
+                o[v] = data[v];
+                dict.push(o);
+            })
+        )
+
+   // 显示列表
+
+    
+
+    // 匹配单词
+    function findWords(wordToMatch,dict){
+        return dict.filter(word =>{
+            // 获取数组里面对象的 key
+            // console.log(Object.keys(word));
+
+            // return word['a'];
+            // return word[wordToMatch];
+            
+            const regex  = new RegExp(wordToMatch,'gi');// g:global,i:intensive
+            // Object.keys(word)[0].match(regex);
+            // 如果包含字段，返回字段，返回word对应的值即可；如果不包含阻断，match会返回为null，不进行if下的操作
+
+            if (Object.keys(word)[0].match(regex))
+                return word[Object.keys(word)[0]];
+           })
+    };
+
+    // 在Html中显示匹配的单词
+
+    function displayMatches() {
+        const matchArray = findWords(this.value, dict);
+        // console.log(matchArray);
+        // console.log(matchArray[0]);
+        const html = matchArray.map(word => {
+            const wordName = Object.keys(word); // 键名
+            // console.log(wordName.replace('a',`<span class="hl">${this.value}</span>`));
+            const wordDefinition = Object.values(word); // 值
+            const regex = new RegExp(this.value, 'gi');
+            const wordNameHl = wordName.toString().replace(regex, `<span class="hl">${this.value}</span>`);
+            // const stateName = place.state.replace(regex, `<span class="hl">${this.value}</span>`);
+
+            return `
+                <li>
+                    <span class="name">${wordNameHl}</span>
+                    <br>
+                    <span class="definition">${wordDefinition}</span>
+                </li>
+            `;
+        }).join('');
+
+        content.innerHTML = html;
+    }
+
+
+    // let selectedWord = findWords('abs',dict);
+    console.log(dict);
+    // console.log(selectedWord);
+    input.addEventListener('change',displayMatches);
+    input.addEventListener('keyup', displayMatches);
+    
+</script>
+    
+
+</html>

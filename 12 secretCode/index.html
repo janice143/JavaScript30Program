@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Key Sequence Detection</title>
+    <script type="text/javascript" src="https://www.cornify.com/js/cornify.js"></script>
+</head>
+<body>
+    <p>Press the secret code to enter another world!</p>
+</body>
+<script>
+    p = document.querySelector('p');
+    
+    pressCode = []
+    secretCode = "happy 2022"
+    //window添加键盘监听事件
+    window.addEventListener('keyup',(e)=>{
+        // console.log(e.key)
+        pressCode.push(e.key)
+        // console.log(pressCode)
+        // 处理pressCode，如果包含secretCode，那么显示出一些隐藏彩蛋
+        // pressCode.splice(-secretCode.length,secretCode.length)
+        console.log(pressCode.splice(-secretCode.length - 1, pressCode.length - secretCode.length))
+        // console.log(pressCode.join(''))
+        if (pressCode.join('').includes(secretCode)) {
+            console.log('DING DING!');
+            p.style.display = 'none';
+
+            cornify_add();
+        }
+
+    })
+    
+
+</script>
+
+</html>

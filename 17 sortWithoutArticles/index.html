@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sort withoout articles</title>
+</head>
+<style>
+body{
+    margin: 0;
+    padding: 0;
+    background: url("https://source.unsplash.com/nDqA4d5NL0k/2000x2000");
+    background-size:cover;
+    min-height: 100vh;
+
+}
+#bands{
+    width: 500px;
+    margin:50px auto;
+    box-shadow: 0 0 0 20px rgba(0, 0, 0, 0.05);
+    list-style: inside square;
+    font-size: 20px;
+    padding: 0;
+
+}
+#bands li{
+    border-bottom: 1px solid #efefef;
+    padding: 20px;
+    background: white;
+}
+#bands li:last-child {
+      border-bottom: 0;
+}
+</style>
+<body>
+    
+    <ul id="bands"></ul>
+
+<script>
+const bands = ['The Plot in You', 'The Devil Wears Prada', 'Pierce the Veil', 'Norma Jean', 'The Bled', 'Say Anything', 'The Midway State', 'We Came as Romans', 'Counterparts', 'Oh, Sleeper', 'A Skylit Drive', 'Anywhere But Here', 'An Old Dog'];   
+function strip(bandName){
+    return bandName.replace(/^(a |the |an )/i,'').trim();
+}
+const sortedBands = bands.sort(
+    function(a,b){
+        return strip(a) > strip(b) ? 1 : -1
+    }
+)
+
+// console.log(sortedBands)
+
+// // 先将bands元素中开头为a|the|an的去掉前缀，返回新的bands
+// function newBands(bands){
+//     return bands.map(band => {
+//         return band.replace(/^(a |the |an )/i,'').trim();
+//         // console.log(band.replace(/^(a |the |an )/i,'').trim());
+//     })
+// }
+// const sortedBands1 = newBands(bands).sort()
+// console.log(sortedBands1)
+
+document.querySelector('#bands').innerHTML = sortedBands.map(band => `<li>${band}</li>`).join('');
+
+
+
+</script>
+</body>
+</html>
