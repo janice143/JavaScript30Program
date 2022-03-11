@@ -5,7 +5,7 @@ tags: 原生javascript项目
 categories: 30个原生javascript项目
 ---
 
-> 作者：©[Iaine 万一](https://github.com/janice143?tab=repositories)
+> 作者：©[iaineisalsoyan](https://github.com/janice143?tab=repositories)
 > 简介：[30 Day Challenge](https://courses.wesbos.com/account)是 [Wes Bos](https://github.com/wesbos) 设计的一个 30 天原生js编程挑战。项目免费提供了 30 个视频教程、30 个挑战的起始文档和 30 个挑战解决方案源代码。
 >
 > 本项目为第13天的“图片随屏幕滚动而滑入滑出”项目。Have fun with the website! ♪(^∇^*)
