@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>flex panel</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Amatic+SC">
+    <style>
+        body{
+            margin:0;
+            padding: 0;
+            background-color: blueviolet;
+        }
+        .panels{
+            min-height: 100vh;
+            display: flex; 
+        
+        }
+        .panel{
+            color:white;
+            overflow: hidden;
+            display: flex;
+            flex-direction:column;
+            /* width: 20%; */
+            flex:1;
+            font-size:20px;
+            background-size: cover;
+            background-position: center;
+            transition:
+            font-size 0.7s cubic-bezier(0.61,-0.19, 0.7,-0.11),
+            flex 0.7s cubic-bezier(0.61,-0.19, 0.7,-0.11),
+            background 0.2s;
+        }
+        .panel1 { background-image:url(https://source.unsplash.com/gYl-UtwNg_I/1500x1500); }
+        .panel2 { background-image:url(https://source.unsplash.com/rFKUFzjPYiQ/1500x1500); }
+        .panel3 { background-image:url(https://images.unsplash.com/photo-1465188162913-8fb5709d6d57?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&cs=tinysrgb&w=1500&h=1500&fit=crop&s=967e8a713a4e395260793fc8c802901d); }
+        .panel4 { background-image:url(https://source.unsplash.com/ITjiVXcwVng/1500x1500); }
+        .panel5 { background-image:url(https://source.unsplash.com/3MNzGlQM7qs/1500x1500); }
+
+        p{
+            /* border: 1px solid red; */
+            width: 100%;
+            display: flex;
+            justify-content:center;
+            align-items: center;
+            flex: 1 0 auto;
+            margin:0;
+            transition: transform 0.5s;
+            text-transform: uppercase;
+            font-family: 'Amatic SC',cursive;
+            text-shadow: 0 0 4px rgba(0,0,0,0.72),0 0 14px rgba(0,0,0,0.45);
+        }
+        .open{
+            flex-grow:5;
+        }
+
+        p:nth-child(1){
+            transform:translateY(-100%);
+        }
+        p:nth-child(3){
+            transform:translateY(100%);
+        }
+        .open p:nth-child(1){
+            transform:translateY(0);
+        }
+        .open p:nth-child(3){
+            transform:translateY(0);
+        }
+        .open p:nth-child(2){
+            font-size: 30px;
+        }
+        
+
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="panels">
+            <div
+            v-for="panel in panels"
+            class = "panel"
+            :class="[{open:panel.isOpen},panel.name]"
+            @click="clickOpen(panel)"
+            >
+            <p>{{panel.topWord}}</p>
+            <p>{{panel.middleWord}}</p>
+            <p>{{panel.bottomWord}}</p>
+        </div>
+        </div>
+    </div>
+    
+<script>
+const vm = new Vue({
+    el:'#app',
+    data:{
+        panels: [
+        {name: "panel1", topWord: "Hey", middleWord: "Let's", bottomWord: "Dance", isOpen: false, isActive: false},
+        {name: "panel2", topWord: "Give", middleWord: "Take", bottomWord: "Receive", isOpen: false, isActive: false},
+        {name: "panel3", topWord: "Experience", middleWord: "It", bottomWord: "Today", isOpen: false, isActive: false},
+        {name: "panel4", topWord: "Give", middleWord: "All", bottomWord: "You can", isOpen: false, isActive: false},
+        {name: "panel5", topWord: "Life", middleWord: "In", bottomWord: "Motion", isOpen: false, isActive: false}
+      ]
+    },
+    methods:{
+        clickOpen:function(panel){
+            panel.isOpen = !panel.isOpen
+            // console.log(panel.name)
+        }
+        // 点击panel 12345，给对应的panel添加.panel-open属性
+    //     function clickOpen(num){
+    //         const panelNumIf = document.getElementsByClassName(`panel${num} panel-open`);
+    //         const panelNum = document.getElementsByClassName(`panel${num}`);
+    //         // console.log(panelNumIf[0])
+    //         if (panelNumIf[0])
+    //             panelNumIf[0].classList.remove('panel-open');
+    //         else
+    //             panelNum[0].classList.add('panel-open');//添加playing类属性
+    //         console.log(`panel${num} panel-open`);          
+    //     };
+    }
+
+})
+</script>
+</body>
+
+</html>

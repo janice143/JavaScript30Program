@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>pianoHit</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <div class="switch">
+            <a href="#"
+            v-for="instrument in instruments"
+            :key = "instrument.name"
+            :class = "[instrument.isOn ? 'chosen' : '']"
+            @click="addChosen($event,instrument.name)"
+            >{{instrument.text}}</a>
+            <!-- {{instrument.name}} -->
+        </div>
+        
+        <div 
+        :class="[drumOn ?  '':'notShow','drumKit']">
+            
+            <div
+            v-for="key in drumKeys"
+            :key = "key.keyCode"
+            :class="[key.isPlaying ? 'playing' : '','key']"
+            @transitionend="removeTransition($event,key)"
+            >
+            <a href="#" @click="clickPlaySound($event,key.keyCode)">
+                <kbd>{{key.keyName}}</kbd>
+                <span class="key-tune">{{key.soundName}}</span>
+            </a>
+            
+            </div>
+        </div>
+        
+        <div 
+        :class="[pianoOn ?  '':'notShow','pianoKit']">
+            <div
+            v-for="key in pianoKeys"
+            :key = "key.keyCode"
+            :class="[key.isPlaying ? 'playing' : '','key']"
+            @transitionend="removeTransition($event,key)"
+            >
+            <a href="#" @click="clickPlaySound($event,key.keyCode)">
+                <kbd>{{key.keyName}}</kbd>
+                <span class="key-tune">{{key.soundName}}</span>
+            </a>
+            
+            </div>
+        </div>
+
+    </div>
+<script>
+const app = new Vue({
+    el:"#app",
+    data:{
+        drumKeys: [
+        {keyCode: 65, keyName: "A", soundName: "clap", audio: new Audio("sounds/clap.wav"), isPlaying: false},
+        {keyCode: 83, keyName: "S", soundName: "hihat", audio: new Audio("sounds/hihat.wav"), isPlaying: false},
+        {keyCode: 68, keyName: "D", soundName: "kick", audio: new Audio("sounds/kick.wav"), isPlaying: false},
+        {keyCode: 70, keyName: "F", soundName: "openhat", audio: new Audio("sounds/openhat.wav"), isPlaying: false},
+        {keyCode: 71, keyName: "G", soundName: "boom", audio: new Audio("sounds/boom.wav"), isPlaying: false},
+        {keyCode: 72, keyName: "H", soundName: "ride", audio: new Audio("sounds/ride.wav"), isPlaying: false},
+        {keyCode: 74, keyName: "J", soundName: "snare", audio: new Audio("sounds/snare.wav"), isPlaying: false},
+        {keyCode: 75, keyName: "K", soundName: "tom", audio: new Audio("sounds/tom.wav"), isPlaying: false},
+        {keyCode: 76, keyName: "L", soundName: "tink", audio: new Audio("sounds/tink.wav"), isPlaying: false},
+      ],
+      pianoKeys:[
+        {keyCode: 65, keyName: "A", soundName: "do", audio: new Audio("sounds/1.MP3"), isPlaying: false},
+        {keyCode: 83, keyName: "S", soundName: "re", audio: new Audio("sounds/2.MP3"), isPlaying: false},
+        {keyCode: 68, keyName: "D", soundName: "mi", audio: new Audio("sounds/3.MP3"), isPlaying: false},
+        {keyCode: 70, keyName: "F", soundName: "fa", audio: new Audio("sounds/4.MP3"), isPlaying: false},
+        {keyCode: 71, keyName: "G", soundName: "sol", audio: new Audio("sounds/5.MP3"), isPlaying: false},
+        {keyCode: 72, keyName: "H", soundName: "la", audio: new Audio("sounds/6.MP3"), isPlaying: false},
+        {keyCode: 74, keyName: "J", soundName: "xi", audio: new Audio("sounds/7.MP3"), isPlaying: false},
+        
+      ],
+      instruments:[
+        {text:"Drum Kit",name:"drumKeys",isOn:true,wallpaper:"./drumback.jpg"},
+        {text:"Piano Kit",name:"pianoKeys",isOn:false,wallpaper:"./pianoback.jpg"}
+      ],
+      drumOn:true,
+      pianoOn:false
+
+    },
+    methods:{
+        // 点击a标签，切换键盘；
+        addChosen:function(e,instrumentName){
+            // console.log(this.instruments);
+            const wallpaper = document.getElementsByTagName("html");
+            this.instruments.find(instrument=>{
+                
+                if(instrument.name !==instrumentName){
+                    instrument.isOn = false;
+                }else{
+                    instrument.isOn = true;
+                    // console.log(instrument.wallpaper)
+                    wallpaper[0].style.backgroundImage="url("+`${instrument.wallpaper}`+")";           
+                    // return instrument.name === instrumentName}
+                };
+                if (instrument.name==='drumKeys') this.drumOn=instrument.isOn;
+                if (instrument.name==='pianoKeys') this.pianoOn=instrument.isOn;
+                console.log(this.drumOn,this.pianoOn)
+               
+            });
+            // drumOn=this.instruments['drumKeys'].isOn;
+            // pianoOn = this.instruments['pianoKeys'].isOn;
+            // console.log(this.instruments)
+
+            // console.log(instrument)
+            
+            
+            // console.log(instrument.wallpaper)
+            },
+        // 
+
+         // 去掉playing 类属性
+        removeTransition:function(e,key){
+            // console.log(e.propertyName);
+            if (e.propertyName !== 'transform') return;
+            key.isPlaying = false;
+        },
+         // 点击键盘字母时，对应的键添加class属性
+        playSound:function(e){
+            // if()
+            const instrument = this.instruments.find(instrument=>{
+                return instrument.isOn === true
+                // console.log(instrument.isOn)
+            });
+            if(!instrument) return;
+            // console.log(this,instrument.name,this[`${instrument.name}`]);
+            
+            const key = this[`${instrument.name}`].find(key=>{
+                return key.keyCode === e.keyCode });
+            // console.log(key);
+            if(!key) return;
+            key.audio.currentTime = 0;
+            key.isPlaying = true;
+            key.audio.play();
+        },
+        clickPlaySound:function(e,keycode){
+            const instrument = this.instruments.find(instrument=>{
+                return instrument.isOn === true
+                // console.log(instrument.isOn)
+            });
+            if(!instrument) return;
+            // console.log(this,instrument.name,this[`${instrument.name}`]);
+            
+            const key = this[`${instrument.name}`].find(key=>{
+                return key.keyCode === keycode });
+           
+            // console.log(key);
+            if(!key) return;
+            key.audio.currentTime = 0;
+            key.isPlaying = true;
+            key.audio.play();
+        }
+   
+    },
+    mounted:function(){
+        window.addEventListener('keydown',this.playSound)
+    }
+}) 
+ 
+</script>
+
+</body>
+</html>

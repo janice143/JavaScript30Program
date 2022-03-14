@@ -1,0 +1,78 @@
+a{
+    text-decoration: none;
+    color:black; 
+}
+html {
+font-size: 10px;
+background: url('./drumback.jpg') bottom center;
+background-size: cover;
+/* 让背景图片不随滚轮缩放 */
+background-attachment:fixed; 
+}
+
+.drumKit,.pianoKit{
+    /* background-color: red; */
+    /* 在需要垂直居中的父元素上，设置display:flex和align-items：center。要求：父元素必须显示设置height值 */
+    display: flex;
+    flex:1;
+    min-height: 90vh; /*vh 就是当前屏幕可见高度的100% https://blog.csdn.net/weixin_42207975/article/details/107145439*/
+    align-items: center; /*子元素水平居中*/
+    justify-content: center; /*子元素垂直居中*/
+
+}
+.key{
+    width: 90px;
+    height: 80px;
+    background: rgba(0,0,0,0.4);
+    text-shadow: 0 0 .5rem black;
+    margin-right: 10px;
+    /* margin-top: 310px;  */
+    text-align: center;   
+    border:1px solid rgba(255,255,255,0.2);
+    border-radius: 5px;
+    transition:all 0.07s ease;
+}
+kbd{
+    display: block;
+    font-size: 30px;
+    color:white;
+    margin-bottom: 0px;
+    margin-top: 10px;
+}
+.key-tune{
+    font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: .1rem;
+  color: #ffc600;
+}
+.playing{
+    transform: scale(1.1);
+    border-color: #ffc600;
+    box-shadow: 0 0 1rem #ffc600;
+}
+.switch{
+    width: 300px;
+    height:30px;
+    font-size: 20px;
+    background:rgb(66,132,243,0.4);
+    position: fixed;
+    left:0;  
+    right:0;  
+    margin:0 auto; 
+    /* border-bottom:2px solid black; */
+    line-height: 30px;   
+    text-align: center; 
+    color:black;        
+}
+
+.switch a:nth-child(1){
+    margin-right: 30px;
+    
+}
+.switch .chosen{
+    color:white;
+}
+
+.notShow{
+    display: none;
+}

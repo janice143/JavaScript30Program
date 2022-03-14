@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Procession with Javascipt</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+</head>
+<style>
+    /* 全局变量定义在root元素里，这样任何选择器都可以使用这些变量 */
+:root{
+    --color:#fecc00;
+    --spacing:10px;
+    --blur:10px;
+}
+.text-color{
+    color:var(--color);
+}
+body{
+    padding: 0;
+    margin: 0;
+    background-color: black;
+    
+}
+#app{
+    width: 900px;
+    text-align: center;
+    margin:0 auto;
+    color:white;
+    
+}
+.controlers{
+    margin-top: 50px;
+    font-size: 20px;
+    font-weight: bold;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+}
+label{
+    margin-right: 10px;
+}
+input{
+    margin-right: 20px;
+}
+img{
+    margin-top:50px;
+    width:600px;
+    height: 375px;
+    padding: var(--spacing);/* var函数获取变量 */
+    background-color: var(--color);
+    filter:blur(var(--blur));
+
+}
+
+
+</style>
+<body>
+    <div id="app">
+        <h2>利用<span class="text-color">JS</span>更新CSS自定义变量</h2>
+
+        <div class="controlers">
+            <label for="spacing">外边距:</label>
+            <input id="spacing" type="range" name="spacing" v-model="spacing">
+    
+            <label for="blur">模糊值:</label>
+            <input id="blur" type="range" name="blur" v-model="blur">
+    
+            <label for="color">底色:</label>
+            <input id="color" type="color" name="color" v-model="color">
+        </div>
+    
+        <img src="https://source.unsplash.com/7bwQXzbF6KE/800x500">
+    </div>
+<script>
+const app = new Vue({
+    el:'#app',
+    data:{
+        spacing:10,
+        blur:10,
+        color:"#ffc600"
+    },
+    // mounted:function(){
+    //     this.updateSpacing();
+    //     this.updateBlur();
+    //     this.updateColor();
+        
+    // },
+    methods:{
+        updateCSSVariable:function(name,value){        
+            this.$el.style.setProperty(name,value);                    
+        },
+        updateSpacing:function(){
+            this.updateCSSVariable('--spacing',`${this.spacing}px`)
+        },
+        updateBlur:function(){
+            this.updateCSSVariable('--blur',`${this.blur}px`)
+        },
+        updateColor:function(){
+            this.updateCSSVariable('--color',`${this.color}`)
+        }      
+
+    },
+    watch:{
+        // 移动滑块时，更新CSS变量
+        spacing:function(){
+            this.updateSpacing();
+        },
+        blur:function(){
+            this.updateBlur();
+        },
+        color:function(){
+            this.updateColor();
+        }
+    }
+})
+
+
+</script>
+</body>
+</html>

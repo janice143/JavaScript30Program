@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real Time Clock</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <div class="clock">
+            <div class="hour-hand hand" 
+            :style = "transformHandStyle(hourDegrees)"
+            ></div>
+            <div class="minute-hand hand"
+            :style = "transformHandStyle(minsDegrees)"
+            ></div>
+            <div class="second-hand hand"
+            :style = "transformHandStyle(secDegrees)"
+            ></div>
+            <div class="number">
+                <span 
+                v-for = "num in nums"
+                :class="num.name"
+                >{{num.text}}</span>
+            </div>
+        </div>
+    </div>
+<script>
+const app = new Vue({
+    el:'#app',
+    data:{
+        nums:[
+            {name:"num1",text:1},
+            {name:"num2",text:2},
+            {name:"num3",text:3},
+            {name:"num4",text:4},
+            {name:"num5",text:5},
+            {name:"num6",text:6},
+            {name:"num7",text:7},
+            {name:"num8",text:8},
+            {name:"num9",text:9},
+            {name:"num10",text:10},
+            {name:"num11",text:11},
+            {name:"num12",text:12}
+            ],
+        hourDegrees:0,
+        minsDegrees:0,
+        secDegrees:0
+    },
+    mounted:function(){
+        setInterval(this.setDate,1000);
+        this.setDate();
+    },
+    methods:{
+        // 获取当前时间，从时间里设置指针
+        setDate:function(){
+            const time = new Date();
+            const second = time.getSeconds();
+            this.secDegrees = parseInt(second/60*360)+90; 
+
+            const minute= time.getMinutes();
+            this.minsDegrees = parseInt(minute/(60)*360+second/10)+90;
+
+            const hour= time.getHours();
+            this.hourDegrees = parseInt(hour/(12)*360+minute/(60)*30)+90;
+           
+        },
+        transformHandStyle:function(degrees){
+            return {transform: 'rotate('+degrees+'deg)'}
+        }
+        
+    }
+})
+</script>    
+</body>
+</html>

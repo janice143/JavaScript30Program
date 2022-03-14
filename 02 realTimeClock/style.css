@@ -1,0 +1,128 @@
+body{
+    margin: 0;
+    padding: 0;
+    background-color: black;
+    color:white;
+    text-shadow: 0 0 .5rem black;
+}
+#app{
+
+    display: flex;
+    min-height: 100vh;
+    align-items: center;
+    justify-content: center;
+
+}
+.clock{
+    width: 300px;
+    height: 300px;
+    border-radius: 300px;
+    border: 20px solid white;
+    position: relative;
+
+}
+.hand{
+    width: 120px;
+    height: 6px;
+    background-color: blueviolet;
+    position:absolute;
+    top:148px;
+    right: 148px;
+
+    transform-origin: 100%;
+    transition:all 0.05s;
+    transition-timing-function: cubic-bezier(0.1, 2.7, 0.58, 1);
+}
+.hour-hand{
+    width: 100px;
+}
+.second-hand{
+    height: 4px;
+}
+.number{
+    width: 300px;
+    height:300px;
+    font-size: 15px;
+    
+    /* border: 1px solid blue; */
+    /* border-radius: 280px; */
+
+    position:absolute;
+    top:0px;
+    right: 0px;
+}
+.number span{
+    display: block;
+    width: 30px;
+    height: 30px;
+    /* background-color: red; */
+    text-align: center;
+    line-height: 30px;
+}
+/* 数字位置算法
+    clc;
+    clear;
+    num=2;
+    top=135*sin((num-3)*30/180*pi)+135
+    left=135*cos((num-3)*30/180*pi)+135
+*/
+.num12{
+    position: absolute;
+    left:135px;
+}
+.num1{
+    position: absolute;
+    top: 18.1px;
+    left:202.5px;
+}
+.num2{
+    position: absolute;
+    top: 67.5px;
+    left:251.9px;
+}
+.num4{
+    position: absolute;
+    top:202.5px;
+    left:251.9px;
+
+}
+.num5{
+    position: absolute;
+    top: 251.9px;
+    left:202.5px;
+}
+.num7{
+    position: absolute;
+    top: 251.9px;
+    left:67.5px;
+}
+.num8{
+    position: absolute;
+    top: 202.5px;
+    left:18.1px;
+}
+.num10{
+    position: absolute;
+    top: 67.5px;
+    left:18.1px;
+}
+.num11{
+    position: absolute;
+    top: 18.1px;
+    left:67.5px;
+}
+.num3{
+    position: absolute;
+    right:0px;
+    top:135px;
+}
+.num6{
+    position: absolute;
+    bottom:0px; 
+    left:135px;
+}
+.num9{
+    position: absolute;
+    left:0px;
+    top:135px;
+}

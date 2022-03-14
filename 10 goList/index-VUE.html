@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>go list!</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <style>
+        body{
+            margin:0;
+            padding: 0;
+        }
+      
+        #go-task-main{
+            max-width: 400px;
+            margin: 50px auto;
+            border-radius: 5px;
+            border:1px solid black;
+            box-shadow: 10px 10px 0 rgba(0,0,0,0.1);
+            font-size: 15px;
+            position: relative;
+        }
+        .add-icon,#task-input{
+            display:block;
+            margin:0 auto;
+            height: 50px;
+            width: 100%;
+            padding:0;
+            margin:0;
+            text-align: center;
+            font-size: 15px;
+            border:none;
+            border-bottom: 1px solid #e4a3a3;
+            border-top-right-radius: 5px;
+            border-top-left-radius: 5px;
+            box-sizing:border-box;
+            
+        }
+
+        .task-item{
+            height: 50px;
+            border-bottom: 1px solid #F1F1F1;
+
+            line-height: 50px;
+            display: flex;
+            align-items: center;
+            padding:0 ;
+            padding:0 0 0 20px;
+        }
+        .task-item p{
+            margin-left:10px;
+            margin-top: 0;
+            margin-bottom: 0;
+            width: 340px;
+            padding-left: 10px;
+        }
+        .task-item :last-child {
+            border-bottom: 0;
+        }
+        .add-icon{
+            background-color: rgba(220,38,38,0.8);
+            font-size: 30px;
+            color:white;
+            position: absolute;
+            top:0;
+            text-align: center;
+            line-height: 50px;
+            /* display: none; */
+        }
+        .add-icon:hover{
+           
+            cursor:pointer;
+        }
+        .task-item:hover{
+            background: #F9F9F9;
+            cursor:pointer;
+        }
+        input:checked + p {
+            background: #F9F9F9;
+            text-decoration: line-through;
+        }
+
+
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div id="go-task-main">        
+            <input id="task-input" type="text" placeholder="添加一个任务，回车确认" 
+            v-model="taskText"
+            @change="displayTask">
+            <div class="add-icon"
+            @click="hide"
+            v-show="addHideFun">+</div>
+            <div
+            v-for="item in items"
+            class="task-item"
+            :key="item.id"
+            @dblclick="removeTask($event)"
+            >
+                <input type="checkbox" 
+                v-model="item.checked"
+                @click="clickCheck(item.id,$event)">
+                <p>{{item.text}}</p>          
+            </div>                      
+        </div>
+    </div>
+<script>
+const vm = new Vue({
+    el:'#app',
+    data:{
+        items:[
+            {id:0,text:"tip1: 双击删除任务",checked:false},
+            {id:1,text:"tip2: 完成一项任务打钩",checked:false},
+            {id:2,text:"tip3: 按住shif键多选",checked:false},
+            {id:3,text:"开启你的任务",checked:false}
+        ],
+        addHideFun:true,
+        taskText:'',
+        lastChecked:undefined,
+    },
+    methods:{
+        hide:function(){
+            this.addHideFun= false;
+        },
+        clickCheck:function(id,e){
+            let inBetween = false;
+            // console.log(e.shiftKey)
+            // 打印出按住shift键后的任务列表,标记第一个最后一个check的box，这个box到按住shift后点击的box都打印出来
+            if(e.shiftKey && e.target.checked)
+                this.items.forEach(inputCheck => {
+                    // console.log(inputCheck === this || inputCheck === lastChecked);
+                    if (inputCheck.id === id || inputCheck.id === this.lastChecked) {
+                        inBetween = !inBetween;
+                        // console.log('Starting to check them in between!');
+                    }
+                    // console.log('行内是否',inBetween);
+                    if (inBetween) {
+                        inputCheck.checked = true;
+                    }
+                })
+            this.lastChecked = id;
+        },
+        // 添加任务
+        displayTask:function(){
+            const id = this.items[this.items.length-1].id+1;
+            this.items.push({id:id,text:this.taskText,checked:false})
+            this.taskText = ''
+
+        },
+        removeTask:function(e){
+            // console.log(e.path[1],this.$el)
+            e.path[1].remove()
+        }
+    
+// 程序有e问题，删除项目的时候，data里的Item数据没有更新
+        
+    },
+    
+
+
+})
+</script>
+</body>
+</html>

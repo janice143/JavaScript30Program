@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whack A Mole!</title>
+    <link href='https://fonts.googleapis.com/css?family=Amatic+SC:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <h1>Whack-a-mole! <span class="score">{{score}}</span></h1>
+        <button @click="startGame">Start!</button>
+        <div class="game">
+            <div
+            v-for="hole in holes"
+            :key="hole.id"
+            :class="[{up:hole.peepUp},hole.name]"
+            class="hole"
+            ><div class="mole"
+            @click="bonk($event)"></div></div>
+          
+        </div>
+    </div>
+<script>
+const vm = new Vue({
+    el:'#app',
+    data:{
+        lastHole:'',
+        timeUp:false,
+        score:0,
+        holes:[
+            {id:0,name:'hole1',peepUp:false},
+            {id:1,name:'hole2',peepUp:false},
+            {id:2,name:'hole3',peepUp:false},
+            {id:3,name:'hole4',peepUp:false},
+            {id:4,name:'hole5',peepUp:false},
+            {id:5,name:'hole6',peepUp:false},
+        ],
+        
+    },
+    methods:{
+        startGame:function(){
+            this.score = 0;
+            this.timeUp = false;
+            this.peep();
+            setTimeout(() => this.timeUp = true, 10000)
+        },
+        peep:function(){
+            const time = this.randomTime(200, 1000);
+            const hole = this.randomHole(this.holes);
+            // console.log(hole);
+            hole.peepUp = true;
+            setTimeout(() => {
+                hole.peepUp = false;
+                if (!this.timeUp) this.peep();
+            }, time);
+
+        },
+        randomTime:function(min, max){
+            return Math.round(Math.random() * (max - min) + min); 
+        },
+        randomHole:function(holes){
+            const idx = Math.floor(Math.random() * holes.length);
+            // console.log(idx)
+            const hole = holes[idx];
+            if (hole === this.lastHole) {
+                console.log('Ah nah thats the same one bud');
+                return this.randomHole(holes);
+            }
+            this.lastHole = hole;
+            return hole;
+        },
+        bonk:function(e){
+            if(!e.isTrusted) return; // cheater!
+            this.score++;
+            this.peepUp = false;
+        }
+
+    }
+})
+</script>
+</body>
+</html>

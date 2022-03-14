@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Canvas</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <style>
+        body{
+            margin:0;
+            padding: 0;
+        }
+        html, body {
+            margin:0;
+            overflow: hidden;
+      }
+    
+        canvas{
+            overflow: hidden;
+        }
+    
+        #myCanvas{
+            border: 1px solid black;
+            margin:30px auto 20px;
+            display:flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .controlers{
+                margin-top: 30px;
+                font-size: 15px;
+                font-weight: bold;
+                display:flex;
+                align-items: center;
+                justify-content: center;
+            }
+            label{
+                margin-right: 10px;
+            }
+            input{
+                margin-right: 10px;
+            }
+            #clear{
+                margin:0px auto;
+                display:flex;
+                align-items: center; 
+                justify-content: center;
+                font-size: 15px;
+                font-weight: bold;
+    
+            }
+            #clear{
+                background: #5E5DF0;
+                border-radius: 999px;
+                box-shadow: #5E5DF0 0 10px 20px -10px;
+                box-sizing: border-box;
+                color: #FFFFFF;
+                cursor: pointer;
+                font-family: Inter,Helvetica,"Apple Color Emoji","Segoe UI Emoji",NotoColorEmoji,"Noto Color Emoji","Segoe UI Symbol","Android Emoji",EmojiSymbols,-apple-system,system-ui,"Segoe UI",Roboto,"Helvetica Neue","Noto Sans",sans-serif;
+                font-size: 16px;
+                font-weight: 700;
+                line-height: 24px;
+                opacity: 1;
+                outline: 0 solid transparent;
+                padding: 8px 18px;
+                user-select: none;
+                -webkit-user-select: none;
+                touch-action: manipulation;
+                width: fit-content;
+                word-break: break-word;
+                border: 0;
+                }
+               
+              
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="main">
+            <div class="controlers">
+                <label for="color">颜色:</label>
+                <input id="color" type="color" name="color" v-model="color">
+        
+                <label for="lineSize">粗细:</label>
+                <input id="lineSize" type="range" name="lineSize" v-model="lineSize" min="1" max="100">
+        
+                <label for="eraser">橡皮擦:</label>
+                <input id="eraser" type="checkbox" name="eraser" v-model="eraserChecked">
+        
+            </div>
+            <canvas id="myCanvas" width="500" height="500" style="overflow:auto;"
+            ref="myCanvas"
+            @mousemove="draw"
+            @mousedown="startDrawing"
+            @mouseup="stopDrawing"
+            @mouseout="stopDrawing"
+            @touchstart="startDrawingTouch"
+            @touchmove="draw"
+            @touchend="stopDrawing"
+            @touchcancel="stopDrawing"
+            ></canvas>
+            
+            <button id="clear" v-on:click="clear">清屏</button>
+    
+        </div>    
+    </div>
+<script>
+    const vm = new Vue({
+        el:'#app',
+        data:{
+            color:"#000000",
+            lineSize:1,
+            isDrawing:false,
+            strokeColor:"black",
+            lastX:0,
+            lastY:0,
+            eraserChecked:false           
+        },
+        methods:{
+            stopDrawing: function(e) {
+                this.isDrawing = false;
+            },
+            startDrawing: function(e) {
+                this.isDrawing = true;
+                [this.lastX, this.lastY] = [e.offsetX, e.offsetY];
+            },
+            // draw
+            draw:function(e){
+                // console.log(e.type);
+                if (!this.isDrawing) return; // stop the fn from running when they are not moused down
+
+                // console.log(e.type);
+                if(e.type == "mousemove"){
+                x = e.offsetX;
+                y = e.offsetY;
+                } else  {
+                // 处理触摸屏操作
+                x = e.changedTouches[0].clientX -e.target.offsetLeft;
+                y = e.changedTouches[0].clientY-e.target.offsetTop;
+                // console.log(e);
+                }
+
+                // console.log(strokeColor,lineSize,eraserChecked) 
+                this.ctx.lineWidth = this.lineSize;
+                if(this.eraserChecked){
+                    this.ctx.strokeStyle="white";
+                }else{
+                    this.ctx.strokeStyle=this.color;
+                }                
+                this.ctx.beginPath();
+                // start from
+                this.ctx.moveTo(this.lastX, this.lastY);
+                // go to
+                this.ctx.lineTo(x, y);
+                this.ctx.stroke();
+                [this.lastX, this.lastY] = [x, y];
+            },
+            
+             // 清屏
+            clear:function(){
+                this.ctx.fillStyle = '#ffffff';
+                this.ctx.fillRect(0, 0, this.$refs.myCanvas.width, this.$refs.myCanvas.height);
+    
+            },
+            startDrawingTouch:function(e){
+                this.isDrawing = true;
+                this.lastX = e.changedTouches[0].clientX-e.target.offsetLeft;
+                this.lastY = e.changedTouches[0].clientY-e.target.offsetTop;
+
+            }
+        },
+        mounted:function(){
+            // console.log(this.$refs)
+            this.ctx = this.$refs.myCanvas.getContext("2d");
+            this.$refs.myCanvas.width = window.innerWidth*0.8;
+            this.$refs.myCanvas.height = window.innerHeight*0.75;
+            this.ctx.lineJoin = 'round';
+            this.ctx.lineCap = 'round';
+        }
+        // updated:function(){
+        //     console.log(color.value)
+        // }
+    })
+</script>    
+</body>
+</html>
